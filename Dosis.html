@@ -1,0 +1,404 @@
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dosis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .container h1 {
+            color: #990000;
+        }
+        select, button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            width: 100%;
+        }
+        .dosis {
+            display: none;
+        }
+        .dosis h2 {
+            color: #cc0000;
+        }
+        .dosis div {
+            margin: 10px 0;
+        }
+        button {
+            background-color: #cc0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #990000;
+        }
+        @media (min-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+            select, button {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Dosis</h1>
+        <select id="sustancia-select">
+            <option value="">Seleccione una sustancia</option>
+            <option value="adrenalina">Adrenalina</option>
+	    <option value="amiodarona">Amiodarona</option>
+            <option value="dexmedetomidina">Dexmedetomidina</option>
+            <option value="dobutamina">Dobutamina</option>
+            <option value="dopamina">Dopamina</option>
+            <option value="fentanilo">Fentanilo</option>
+            <option value="fenitoina">Fenitoína</option>
+             <option value="ketamina">Ketamina</option>
+            <option value="labetalol">Labetalol</option>
+            <option value="lidocaina">Lidocaína</option>
+            <option value="levosimendan">Levosimendan</option>
+            <option value="midazolam">Midazolam</option>
+            <option value="milrinone">Milrinone</option>
+            <option value="nitroglicerina">Nitroglicerina</option>
+            <option value="nitroprusiato">Nitroprusiato de sodio</option>
+            <option value="norepinefrina">Norepinefrina</option>
+            <option value="propofol">Propofol</option>
+            <option value="remifentanilo">Remifentanilo</option>
+            <option value="vasopresina">Vasopresina</option>
+        </select>
+
+        <button onclick="limpiarCampos()">Limpiar</button>
+
+        <div class="dosis" id="dosis-adrenalina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>0,1-1 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.05-0.5 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 1 mcg/kg/min</div>
+            </div>
+        </div>
+<div class="dosis" id="dosis-amiodarona">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>5 mg/kg ó 300 mg/bolo_(20 mL), 2º bolo de 150 mg</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>5 a 15 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Máximo: 1,2 g/día</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-dexmedetomidina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>(0,5-1 µg/kg) en 10 min</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.2-1 mcg/kg/h</div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 1 mcg/kg/h </div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-dobutamina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>No suele usarse en bolo</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>2-20 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 40 mcg/kg/min (en algunos casos extremos)</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-dopamina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>No suele usarse en bolo</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>2-20 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 50 mcg/kg/min (en algunos casos extremos)</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-fentanilo">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>1 - 3 mcg/kg bolo</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>1-4 mcg/kg/h  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>5 mcg/Kg/h</div>
+            </div>
+        </div>
+        <div class="dosis" id="dosis-ketamina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>1-2 mg/kg </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>1-3 mg/kg/h  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>3 mg/kg/h</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-fenitoina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>15-20 mg/kg  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0,5-3 mg/kg/min</div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>3 mg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-labetalol">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>0.25-1 mg/kg/dosis  ó 20 mg cada 5-10 min  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0,25-3 mg/kg/hora </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>200 mg en una sola dosis. Máximo 1200 mg/día</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-lidocaina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>1-1.5 mg/kg  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>20-50 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 0.7 mg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-levosimendan">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div> 0.1 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.05-0.2 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 0.2 mcg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-midazolam">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div> 0.1-0.3 mg/kg (IV en bolo)</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.05-0.2 mg/kg/h </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>0.2 mg/kg/h</div>
+            </div>
+        </div>
+
+      
+
+<div class="dosis" id="dosis-milrinone">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>50 mcg/kg  </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.25-0.75 mcg/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 0.75 mcg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-nitroglicerina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div> 0,25-0,5 µg/kg/min. Titular dosis en 		
+		función de la respuesta</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div> 1-3 µg/kg/min/kg/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 10 µg/kg/min </div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-nitroprusiato">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>No suele usarse en bolo</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.3-10 mcg/kg/min </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 10 mcg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-norepinefrina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>0.05-0.1 mcg/kg/min </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.05-1 mcg/kg/min </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 2 mcg/kg/min</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-propofol">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>1-2 mg/kg </div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>1-4 mg/kg/h </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>4 mg/kg/h </div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-remifentanilo">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>1 mcg/kg</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.05-2 mcg/kg/min</div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Variable según la condición del paciente</div>
+            </div>
+        </div>
+
+        <div class="dosis" id="dosis-vasopresina">
+            <div>
+                <h2>Dosis de ataque</h2>
+                <div>No suele usarse en bolo</div>
+            </div>
+            <div>
+                <h2>Dosis de mantenimiento</h2>
+                <div>0.01-0.04 U/min  </div>
+            </div>
+            <div>
+                <h2>Dosis máxima aceptada</h2>
+                <div>Hasta 0.1 U/min (en algunos casos)</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const select = document.getElementById('sustancia-select');
+
+        select.addEventListener('change', function() {
+            const allDosisDivs = document.querySelectorAll('.dosis');
+            allDosisDivs.forEach(div => div.style.display = 'none');
+
+            const selectedValue = this.value;
+            if (selectedValue) {
+                const dosisDiv = document.getElementById(`dosis-${selectedValue}`);
+                if (dosisDiv) {
+                    dosisDiv.style.display = 'block';
+                }
+            }
+        });
+
+        function limpiarCampos() {
+            select.value = '';
+            const allDosisDivs = document.querySelectorAll('.dosis');
+            allDosisDivs.forEach(div => div.style.display = 'none');
+        }
+    </script>
+</body>
+</html>

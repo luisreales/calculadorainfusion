@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Dilución</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #00796b;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #00796b;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #004d40;
+        }
+
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            color: #004d40;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            label, input, select, button {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            #result {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Dilución</h1>
+        <form id="dilutionForm">
+            <label for="calculationType">Tipo de Cálculo:</label>
+            <select id="calculationType" name="calculationType" onchange="toggleFields()" required>
+                <option value="">Seleccione una opción</option>
+                <option value="dilution">Diluir una sustancia</option>
+                <option value="total">Calcular cantidad total</option>
+            </select>
+
+            <div id="dilutionFields" style="display:none;">
+                <label for="substanceUnit">Unidad de la sustancia:</label>
+                <select id="substanceUnit" name="substanceUnit" onchange="toggleDilutionUnit()" required>
+                    <option value="mg">mg</option>
+                    <option value="g">g</option>
+                    <option value="percentage">%</option>
+                </select>
+                <label id="concentrationLabel" for="concentration">Concentración de la sustancia (mg):</label>
+                <input type="number" id="concentration" name="concentration" step="any">
+                <label for="diluentVolume">Volumen del diluyente (ml):</label>
+                <input type="number" id="diluentVolume" name="diluentVolume" step="any">
+            </div>
+
+            <div id="totalFields" style="display:none;">
+                <label for="concentrationUnit">Unidad de concentración:</label>
+                <select id="concentrationUnit" name="concentrationUnit" onchange="toggleTotalUnit()" required>
+                    <option value="mg/ml">mg/ml</option>
+                    <option value="mcg/ml">mcg/ml</option>
+                    <option value="percentage">%</option>
+                </select>
+                <label id="concentrationPerMlLabel" for="concentrationPerMl">Concentración de la sustancia:</label>
+                <input type="number" id="concentrationPerMl" name="concentrationPerMl" step="any">
+                <label for="totalVolume">Volumen total (ml):</label>
+                <input type="number" id="totalVolume" name="totalVolume" step="any">
+            </div>
+
+            <button type="button" onclick="calculate()">Calcular</button>
+            <button type="button" onclick="clearFields()">Limpiar</button>
+        </form>
+
+        <div id="result">Resultado: </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const calculationType = document.getElementById('calculationType').value;
+            document.getElementById('dilutionFields').style.display = 'none';
+            document.getElementById('totalFields').style.display = 'none';
+
+            if (calculationType === 'dilution') {
+                document.getElementById('dilutionFields').style.display = 'block';
+            } else if (calculationType === 'total') {
+                document.getElementById('totalFields').style.display = 'block';
+            }
+        }
+
+        function toggleDilutionUnit() {
+            const substanceUnit = document.getElementById('substanceUnit').value;
+            const concentrationLabel = document.getElementById('concentrationLabel');
+
+            if (substanceUnit === 'percentage') {
+                concentrationLabel.innerText = 'Concentración de la sustancia (mg):';
+            } else if (substanceUnit === 'mg') {
+                concentrationLabel.innerText = 'Concentración de la sustancia (mg):';
+            } else if (substanceUnit === 'g') {
+                concentrationLabel.innerText = 'Concentración de la sustancia (g):';
+            }
+        }
+
+        function toggleTotalUnit() {
+            const concentrationUnit = document.getElementById('concentrationUnit').value;
+            const concentrationPerMlLabel = document.getElementById('concentrationPerMlLabel');
+
+            if (concentrationUnit === 'mg/ml') {
+                concentrationPerMlLabel.innerText = 'Concentración de la sustancia (mg/ml):';
+            } else if (concentrationUnit === 'mcg/ml') {
+                concentrationPerMlLabel.innerText = 'Concentración de la sustancia (mcg/ml):';
+            } else if (concentrationUnit === 'percentage') {
+                concentrationPerMlLabel.innerText = 'Concentración de la sustancia (%):';
+            }
+        }
+
+        function calculate() {
+            const calculationType = document.getElementById('calculationType').value;
+            let result = 0;
+            let unit = '';
+
+            if (calculationType === 'dilution') {
+                const substanceUnit = document.getElementById('substanceUnit').value;
+                const concentration = parseFloat(document.getElementById('concentration').value);
+                const diluentVolume = parseFloat(document.getElementById('diluentVolume').value);
+
+                if (!isNaN(concentration) && !isNaN(diluentVolume)) {
+                    if (substanceUnit === 'percentage') {
+                        result = (concentration / diluentVolume) / 10;
+                        unit = '%';
+                    } else {
+                        result = concentration / diluentVolume;
+                        if (substanceUnit === 'mg') {
+                            if (result < 0.5) {
+                                result *= 1000;
+                                unit = 'µg/mL';
+                            } else {
+                                unit = 'mg/mL';
+                            }
+                        } else if (substanceUnit === 'g') {
+                            if (result >= 0.5) {
+                                unit = 'g/mL';
+                            } else if (result < 0.5 && result >= 0.0005) {
+                                result *= 1000;
+                                unit = 'mg/mL';
+                            } else {
+                                result *= 1000000;
+                                unit = 'µg/mL';
+                            }
+                        }
+                        if (result >= 500 && unit === 'µg/mL') {
+                            result /= 1000;
+                            unit = 'mg/mL';
+                        }
+                    }
+                    document.getElementById('result').textContent
+                    document.getElementById('result').textContent = `Resultado: ${result.toFixed(2)} ${unit}`;
+                } else {
+                    document.getElementById('result').textContent = "Error: Debe ingresar la concentración y el volumen del diluyente.";
+                }
+            } else if (calculationType === 'total') {
+                const concentrationUnit = document.getElementById('concentrationUnit').value;
+                const concentrationPerMl = parseFloat(document.getElementById('concentrationPerMl').value);
+                const totalVolume = parseFloat(document.getElementById('totalVolume').value);
+
+                if (!isNaN(concentrationPerMl) && !isNaN(totalVolume)) {
+                    if (concentrationUnit === 'percentage') {
+                        result = (concentrationPerMl / 100) * totalVolume * 1000;
+                        unit = 'mg';
+                    } else {
+                        result = concentrationPerMl * totalVolume;
+                        if (concentrationUnit === 'mg/ml') {
+                            unit = 'mg';
+                        } else if (concentrationUnit === 'mcg/ml') {
+                            unit = 'mcg';
+                        }
+                    }
+                    if (result >= 1000 && unit === 'mcg') {
+                        result /= 1000;
+                        unit = 'mg';
+                    }
+                    document.getElementById('result').textContent = `Resultado: ${result.toFixed(2)} ${unit}`;
+                } else {
+                    document.getElementById('result').textContent = "Error: Debe ingresar la concentración por ml y el volumen total.";
+                }
+            }
+        }
+
+        function clearFields() {
+            document.getElementById('dilutionForm').reset();
+            document.getElementById('result').textContent = 'Resultado:';
+            const calculationType = document.getElementById('calculationType').value;
+            if (calculationType === 'dilution') {
+                document.getElementById('dilutionFields').style.display = 'block';
+            } else if (calculationType === 'total') {
+                document.getElementById('totalFields').style.display = 'block';
+            }
+        }
+
+        // Inicializar para mostrar campos correctos si ya hay una opción seleccionada
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleFields();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Velocidad de Infusión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 20px;
+            }
+
+            label, input, select, button {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 16px;
+            }
+
+            #result {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Velocidad de Infusión</h1>
+        <form id="infusionForm">
+            <label for="weight">Peso del paciente (kg):</label>
+            <input type="number" id="weight" name="weight" step="any" required>
+            <button type="button" onclick="clearForm()">Limpiar</button>
+
+            <label for="concentrationType">Tipo de Concentración:</label>
+            <select id="concentrationType" name="concentrationType" onchange="toggleFields()" required>
+                <option value="mg">mg</option>
+                <option value="ui">UI</option>
+            </select>
+
+            <div id="mgFields">
+                <label for="concentrationMg">Concentración de la sustancia (mg):</label>
+                <input type="number" id="concentrationMg" name="concentrationMg" step="any">
+
+                <label for="diluentMg">Cantidad de diluyente (ml):</label>
+                <input type="number" id="diluentMg" name="diluentMg" step="any">
+
+                <label for="doseUnit">Unidad de Dosis:</label>
+                <select id="doseUnit" name="doseUnit" onchange="toggleDoseUnit()">
+                    <option value="mcg/kg/min">mcg/kg/min</option>
+                    <option value="mg/kg/h">mg/kg/h</option>
+                    <option value="mcg/kg/h">mcg/kg/h</option>
+                </select>
+
+                <label id="doseLabel" for="doseMg">Dosis (mcg/kg/min):</label>
+                <input type="number" id="doseMg" name="doseMg" step="any">
+            </div>
+
+            <div id="uiFields" style="display:none;">
+                <label for="concentrationUi">Concentración de la sustancia (UI):</label>
+                <input type="number" id="concentrationUi" name="concentrationUi" step="any">
+
+                <label for="diluentUi">Cantidad de diluyente (ml):</label>
+                <input type="number" id="diluentUi" name="diluentUi" step="any">
+
+                <label for="doseUi">Dosis (UI/min):</label>
+                <input type="number" id="doseUi" name="doseUi" step="any">
+            </div>
+
+            <button type="button" onclick="calculateInfusionRate()">Calcular</button>
+        </form>
+
+        <div id="result">Resultado: </div>
+    </div>
+
+    <script>
+        function toggleFields() {
+            const concentrationType = document.getElementById('concentrationType').value;
+            if (concentrationType === 'mg') {
+                document.getElementById('mgFields').style.display = 'block';
+                document.getElementById('uiFields').style.display = 'none';
+            } else {
+                document.getElementById('mgFields').style.display = 'none';
+                document.getElementById('uiFields').style.display = 'block';
+            }
+            checkFormFields();
+        }
+
+        function toggleDoseUnit() {
+            const doseUnit = document.getElementById('doseUnit').value;
+            const doseLabel = document.getElementById('doseLabel');
+
+            if (doseUnit === 'mcg/kg/min') {
+                doseLabel.innerText = 'Dosis (mcg/kg/min):';
+                document.getElementById('doseMg').placeholder = 'Ingrese la dosis en mcg/kg/min';
+            } else if (doseUnit === 'mg/kg/h') {
+                doseLabel.innerText = 'Dosis (mg/kg/h):';
+                document.getElementById('doseMg').placeholder = 'Ingrese la dosis en mg/kg/h';
+            } else if (doseUnit === 'mcg/kg/h') {
+                doseLabel.innerText = 'Dosis (mcg/kg/h):';
+                document.getElementById('doseMg').placeholder = 'Ingrese la dosis en mcg/kg/h';
+            }
+        }
+
+        function calculateInfusionRate() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const concentrationType = document.getElementById('concentrationType').value;
+
+            let result = 0;
+
+            if (concentrationType === 'mg') {
+                const concentrationMg = parseFloat(document.getElementById('concentrationMg').value);
+                const diluentMg = parseFloat(document.getElementById('diluentMg').value);
+                let doseMg = parseFloat(document.getElementById('doseMg').value);
+                const doseUnit = document.getElementById('doseUnit').value;
+
+                if (doseUnit === 'mg/kg/h') {
+                    doseMg = doseMg * 1000 / 60; // Convertir mg/kg/h a mcg/kg/min
+                } else if (doseUnit === 'mcg/kg/h') {
+                    doseMg = doseMg / 60; // Convertir mcg/kg/h a mcg/kg/min
+                }
+
+                // Convertir mg a µg
+                const concentrationMicrogram = concentrationMg * 1000;
+
+                // Calcular la dosis total en µg/min
+                const totalDosePerMinuteMicrogram = doseMg * weight;
+
+                // Convertir la dosis total a µg/h
+                const totalDosePerHourMicrogram = totalDosePerMinuteMicrogram * 60;
+
+                // Calcular la concentración de la solución en µg/mL
+                const solutionConcentrationMicrogram = concentrationMicrogram / diluentMg;
+
+                // Calcular la velocidad de infusión en mL/h
+                result = totalDosePerHourMicrogram / solutionConcentrationMicrogram;
+            } else if (concentrationType === 'ui') {
+                const concentrationUi = parseFloat(document.getElementById('concentrationUi').value);
+                const diluentUi = parseFloat(document.getElementById('diluentUi').value);
+                const doseUi = parseFloat(document.getElementById('doseUi').value);
+
+                // Calcular la concentración de la solución en UI/mL
+                const solutionConcentrationUi = concentrationUi / diluentUi;
+
+                // Calcular la velocidad de infusión en mL/h
+                result = (doseUi * 60) / solutionConcentrationUi;
+            }
+
+            document.getElementById('result').textContent = `Resultado: ${result.toFixed(2)} mL/h`;
+            document.getElementById('weight').disabled = true;
+        }
+
+        function clearForm() {
+            document.getElementById('infusionForm').reset();
+            document.getElementById('result').textContent = 'Resultado: ';
+            document.getElementById('weight').disabled = false;
+            toggleFields
+            // Asegurar que los campos de concentración se muestren correctamente después de limpiar
+        }
+
+        function checkFormFields() {
+            const weight = document.getElementById('weight').value;
+            const concentrationMg = document.getElementById('concentrationMg').value;
+            const diluentMg = document.getElementById('diluentMg').value;
+            const doseMg = document.getElementById('doseMg').value;
+            const concentrationUi = document.getElementById('concentrationUi').value;
+            const diluentUi = document.getElementById('diluentUi').value;
+            const doseUi = document.getElementById('doseUi').value;
+
+            if (concentrationMg === "" && diluentMg === "" && doseMg === "" && concentrationUi === "" && diluentUi === "" && doseUi === "") {
+                document.getElementById('weight').disabled = false;
+            } else {
+                document.getElementById('weight').disabled = true;
+            }
+        }
+
+        document.getElementById('infusionForm').addEventListener('input', checkFormFields);
+        toggleFields(); // Inicializar los campos correctamente al cargar la página
+    </script>
+</body>
+</html>
