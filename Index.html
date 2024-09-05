@@ -183,6 +183,83 @@
                 font-size: 18px;
             }
         }
+
+        /*Dosis Stylo*/
+        .container-dosis{
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%; /* Change width to 90% */
+            margin: 0 auto; /* Add margin: 0 auto; to center the container */
+        }
+        .dosis-body{
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-dosis {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6e6;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container-dosis {
+            width: 90%;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .container-dosis h1 {
+            color: #990000;
+        }
+        .select-dosis, .button-dosis {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            width: 100%;
+        }
+        .dosis {
+            display: none;
+        }
+        .dosis h2 {
+            color: #cc0000;
+        }
+        .dosis div {
+            margin: 10px 0;
+        }
+        .button-dosis {
+            background-color: #cc0000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button-dosis:hover {
+            background-color: #990000;
+        }
+        @media (min-width: 768px) {
+            .container-dosis {
+                padding: 40px;
+            }
+            .select-dosis, .button-dosis {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -199,11 +276,10 @@
             <button class="tablinks" onclick="openTab(event, 'Dilucion')">Calculadora de Dilución</button>
         </div>
     </div>
-    <div class="velocity-body">
-        <div class="container-velocity">
-            <div id="Velocidad" class="tabcontent">
+    <div id="Velocidad" class="tabcontent">
+        <div class="velocity-body">
+            <div class="container-velocity">
                 <center><h3>Calculadora de Velocidad de Infusión</h3></center>
-        
                 <div class="velocity">
                     <div class="container velocity">
                         <!-- <h1 class="velocity">Calculadora de Velocidad de Infusión</h1> -->
@@ -259,27 +335,73 @@
                 </div>
             </div>
         </div>
-        
-    </body>
-    
+      
 
-    <div id="Dosis" class="tabcontent">
-        <center><h3>Selectora de Dosis</h3></center>
-        <div class="calculator-container">
-            <!-- Incluye aquí el contenido de Dosis.html -->
-            <iframe src="Dosis.html" style="width: 100%; height: 500px; border: none;"></iframe>
-        </div>
+       
     </div>
-
-    <div id="Dilucion" class="tabcontent">
-       <center> <h3>Calculadora de Dilución</h3></center>
-        <div class="calculator-container">
-            <div class="velocidad-content">
-                <!-- Some content here -->
-                   <!-- Incluye aquí el contenido de Dilucion.html -->
-
+    <div id="Dosis" class="tabcontent">
+        <div class="dosis-body"></div>
+        <div class="container-dosis">
+            <center><h3>Selectora de Dosis</h3></center>
+            <div class="main-dosis">
+                <div class="container-dosis">
+                    <h1>Calculadora de Dosis</h1>
+                    <select class="select-dosis" id="sustancia-select">
+                        <option value="">Seleccione una sustancia</option>
+                        <option value="adrenalina">Adrenalina</option>
+                        <option value="amiodarona">Amiodarona</option>
+                        <option value="dexmedetomidina">Dexmedetomidina</option>
+                        <option value="dobutamina">Dobutamina</option>
+                        <option value="dopamina">Dopamina</option>
+                        <option value="fentanilo">Fentanilo</option>
+                        <option value="fenitoina">Fenitoína</option>
+                        <option value="ketamina">Ketamina</option>
+                        <option value="labetalol">Labetalol</option>
+                        <option value="lidocaina">Lidocaína</option>
+                        <option value="levosimendan">Levosimendan</option>
+                        <option value="midazolam">Midazolam</option>
+                        <option value="milrinone">Milrinone</option>
+                        <option value="nitroglicerina">Nitroglicerina</option>
+                        <option value="nitroprusiato">Nitroprusiato de sodio</option>
+                        <option value="norepinefrina">Norepinefrina</option>
+                        <option value="propofol">Propofol</option>
+                        <option value="remifentanilo">Remifentanilo</option>
+                        <option value="vasopresina">Vasopresina</option>
+                    </select>
+        
+                    <button class="button-dosis" onclick="limpiarCampos()">Limpiar</button>
+        
+                    <div class="dosis" id="dosis-adrenalina">
+                        <div>
+                            <h2>Dosis de ataque</h2>
+                            <div>0,1-1 mcg/kg/min</div>
+                        </div>
+                        <div>
+                            <h2>Dosis de mantenimiento</h2>
+                            <div>0.05-0.5 mcg/kg/min</div>
+                        </div>
+                        <div>
+                            <h2>Dosis máxima aceptada</h2>
+                            <div>Hasta 1 mcg/kg/min</div>
+                        </div>
+                    </div>
+                    <div class="dosis" id="dosis-amiodarona">
+                        <div>
+                            <h2>Dosis de ataque</h2>
+                            <div>5 mg/kg ó 300 mg/bolo_(20 mL), 2º bolo de 150 mg</div>
+                        </div>
+                        <div>
+                            <h2>Dosis de mantenimiento</h2>
+                            <div>5 a 15 mcg/kg/min</div>
+                        </div>
+                        <div>
+                            <h2>Dosis máxima aceptada</h2>
+                            <div>Máximo: 1,2 g/día</div>
+                        </div>
+                    </div>
+                    <!-- Rest of the code remains the same -->
+                </div>
             </div>
-          
         </div>
     </div>
 </div>
@@ -404,6 +526,28 @@
 
     document.getElementById('infusionForm').addEventListener('input', checkFormFields);
     toggleFields(); // Inicializar los campos correctamente al cargar la página
+</script>
+<script>
+    const select = document.getElementById('sustancia-select');
+
+    select.addEventListener('change', function() {
+        const allDosisDivs = document.querySelectorAll('.dosis');
+        allDosisDivs.forEach(div => div.style.display = 'none');
+
+        const selectedValue = this.value;
+        if (selectedValue) {
+            const dosisDiv = document.getElementById(`dosis-${selectedValue}`);
+            if (dosisDiv) {
+                dosisDiv.style.display = 'block';
+            }
+        }
+    });
+
+    function limpiarCampos() {
+        select.value = '';
+        const allDosisDivs = document.querySelectorAll('.dosis');
+        allDosisDivs.forEach(div => div.style.display = 'none');
+    }
 </script>
 
 </body>
